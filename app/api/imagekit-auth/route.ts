@@ -15,6 +15,7 @@ export async function GET(){
         return NextResponse.json(authenticationParameters);
     }catch(error){
         console.error("Imagekit server error:", error);
+        
         return NextResponse.json(
             {error: "Imagekit server error:",},
             {
