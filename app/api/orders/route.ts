@@ -3,6 +3,7 @@ import Razorpay from "razorpay";
 import {connectToDB} from "@/lib/db";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
+import Order from "@/models/order.model";
 
 
 
@@ -20,7 +21,7 @@ export async  function POST(req:NextRequest){
                 {status:401}
             )
         }
-        const {productId,variant}=await req.body;
+        const {productId,variant}=await req.json();
         await connectToDB();
 
         const order = await  razorpay.orders.create({
@@ -33,7 +34,7 @@ export async  function POST(req:NextRequest){
         })
 
         const newOrder = await Order.create({
-            userId:session.user.id,
+            userId:session?.user?.id ?? "",
             productId,
             variant,
             razorpayOrderId:order.id,

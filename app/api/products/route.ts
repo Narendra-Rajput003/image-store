@@ -29,13 +29,13 @@ export async function POST(req:NextRequest){
     try{
 
         const session = await  getServerSession(authOptions);
-        if(session?.user.role!=="admin"){
+        if(!session || !session.user || session.user?.role !== "admin"){
             return  NextResponse.json({error:"Unauthorized"},{status:401});
         }
         await connectToDB();
 
         const body:IProduct=await req.json();
-        if(!body.name || !body.imageUrl || !body.variants.length===0){
+        if(!body.name || !body.imageUrl || body.variants.length === 0){
             return NextResponse.json(
                 {error:"All the fields are required"},
                 {status:400}
